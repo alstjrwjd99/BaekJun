@@ -9,4 +9,4 @@ def solution(s):
             else :
                 answer += sen.lower()
         result.append(answer)
-    return ' '.join(result)
+    return ' '.join(result) 
