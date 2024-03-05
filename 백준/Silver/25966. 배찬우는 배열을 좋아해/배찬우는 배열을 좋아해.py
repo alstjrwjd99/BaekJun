@@ -1,3 +1,6 @@
+from sys import stdin
+input = stdin.readline
+
 N,M,q = list(map(int,input().split()))
 arr = []
 qu = []
