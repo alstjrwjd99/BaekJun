@@ -1,15 +1,12 @@
 import sys
 input = sys.stdin.readline
 
-n,m = map(int,input().split())
-nums = list(map(int,input().split()))
-
-for i in range (1,n):
-  nums[i] = nums[i] + nums[i-1]
-
-for _ in range (m):
-  start, end = map(int,input().split())
-  if start == 1 :
-    print(nums[end-1])
-  else :
-    print(nums[end-1]-nums[start-2])
+N,M = map(int,input().split())
+arr = list(map(int,input().split()))
+dp = [0] * (N+1)
+dp[1] = arr[0]
+for i in range (1,N):
+  dp[i+1] = dp[i] + arr[i]
+for _ in range (M):
+  start, end =map(int,input().split())
+  print(dp[end] - dp[start-1])
