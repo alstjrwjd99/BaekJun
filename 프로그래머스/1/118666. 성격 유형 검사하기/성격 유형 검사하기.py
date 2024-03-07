@@ -1,9 +1,5 @@
 def solution(survey, choices):
     answer = ''
-    #R T
-    #C F
-    #J M
-    #A N
     mbti = {'R':0,'T':0,'C':0,'F':0,'J':0,'M':0,'A':0,'N':0}
     for idx,pro in enumerate (survey):
         if choices[idx] < 4 :
