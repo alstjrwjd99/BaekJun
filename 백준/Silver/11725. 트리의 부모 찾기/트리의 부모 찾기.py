@@ -8,8 +8,7 @@ for _ in range(N-1):
     graph[a].append(b)
     graph[b].append(a)
 
-queue = deque()
-queue.append(1)
+queue = deque([1])
 
 ans = [0]*(N+1)
 
