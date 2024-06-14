@@ -20,7 +20,6 @@ def solution(begin, target, words):
                         break
                 if is_diff_one:
                     if word == target:
-                        answer = cnt + 1
+                        return cnt + 1
                     stack.append((word,cnt + 1))
                     visited.add(word)
-    return answer
