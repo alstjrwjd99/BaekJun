@@ -1,35 +1,41 @@
 from collections import deque
 import sys
+input = sys.stdin.readline
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 INF = 1e9
 answer = INF
 
+def in_range (x,y):
+    return 0<=x<n and 0<=y<n
 
 def bfs():
     global answer
-    q = deque()
-    q.append((0, 0, 0, False, False))
-    d = dict()
-    d[(0, 0, False)] = 0
+    # (x, y, 현재 시간, 오작교를 건너갔는지, 절벽 교차 여부)
+    q = deque([(0, 0, 0, False, False)])
+    # (x, y, 오작교를 건너갔는지) -> 최소 시간
+    d = {(0, 0, False) : 0}
 
     while q:
-        x, y, cnt, flag, cross = q.popleft()
-        if cnt > answer:
+        x, y, cnt, flag, cross = q.popleft() 
+        # 현재 경로의 시간이 이미 최단 시간보다 크면 무시
+        if cnt > answer:  
             continue
+        # 목적지에 도착
         if x == n - 1 and y == n - 1:
             answer = min(answer, cnt)
             continue
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n:
+            if in_range(nx,ny):
                 if maps[nx][ny] != 0:
                     if maps[nx][ny] == 1:
                         if cnt + 1 < d.get((nx, ny, flag), INF):
                             q.append((nx, ny, cnt + 1, flag, False))
                             d[(nx, ny, flag)] = cnt + 1
-                    elif not cross:
+                    elif not cross:  # 오작교를 아직 건너지 않았고, 해당 위치가 절벽인 경우
+                        # 오작교의 주기에 맞춰 이동 시간 계산
                         if (cnt + 1) % maps[nx][ny] == 0:
                             t = cnt + 1
                         else:
@@ -37,26 +43,28 @@ def bfs():
                         if t < d.get((nx, ny, flag), INF):
                             q.append((nx, ny, t, flag, True))
                             d[(nx, ny, flag)] = t
+                # 현재 위치가 절벽인 경우
                 else:
-                    if not flag and not cross:
+                    if not flag and not cross:  # 오작교를 아직 건너지 않았고, 절벽 교차도 하지 않은 경우
+                        # 사각형의 네 모서리 위치를 확인하여 절벽이 교차하는지 확인
+                        tmp = True
                         # (상, 우) 확인
-                        temp = True
-                        if nx - 1 >= 0 and ny + 1 < n:
+                        if in_range(nx - 1,ny + 1):
                             if maps[nx - 1][ny] == 0 and maps[nx][ny + 1] == 0:
-                                temp = False
+                                tmp = False
                         # (상, 좌) 확인
-                        if nx - 1 >= 0 and ny - 1 >= 0:
+                        if in_range(nx - 1,ny - 1):
                             if maps[nx - 1][ny] == 0 and maps[nx][ny - 1] == 0:
-                                temp = False
+                                tmp = False
                         # (하, 우) 확인
-                        if nx + 1 < n and ny + 1 < n:
+                        if in_range(nx + 1,ny + 1):
                             if maps[nx + 1][ny] == 0 and maps[nx][ny + 1] == 0:
-                                temp = False
+                                tmp = False
                         # (하, 좌) 확인
-                        if nx + 1 < n and ny - 1 >= 0:
+                        if in_range(nx + 1,ny - 1):
                             if maps[nx + 1][ny] == 0 and maps[nx][ny - 1] == 0:
-                                temp = False
-                        if temp:
+                                tmp = False
+                        if tmp:  # 교차하는 절벽이 없으면
                             if (cnt + 1) % m == 0:
                                 t = cnt + 1
                             else:
@@ -64,7 +72,11 @@ def bfs():
                             if t < d.get((nx, ny, True), INF):
                                 q.append((nx, ny, t, True, True))
                                 d[(nx, ny, True)] = t
-n, m = map(int, sys.stdin.readline().split())
-maps = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+
+n, m = map(int, input().split())
+maps = [
+    list(map(int, input().split())) 
+    for _ in range(n)
+] 
 bfs()
-print(answer)
+print(answer) 
