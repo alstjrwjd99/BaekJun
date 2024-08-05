@@ -1,27 +1,37 @@
-from itertools import permutations
+from collections import deque
+from copy import deepcopy
 import math
 
 def solution(numbers):
     answer = 0
-    all_numbers = []
-    number_list = []
-    for n in numbers:
-        number_list.append(n)
-
-    for i in range(1, len(number_list)+1):
-        numbers_len_i = list(permutations(number_list, i))
-        for j in range(len(numbers_len_i)):
-            all_numbers.append(int(''.join(numbers_len_i[j])))
-
-        all_distinct_numbers = set(all_numbers)
-        all_distinct_numbers = list(all_distinct_numbers)
-        
-    for i in range(len(all_distinct_numbers)):
-        flag = True
-        for j in range(2,int(math.sqrt(all_distinct_numbers[i]))+1):
-            if all_distinct_numbers[i] % j == 0:
-                flag = False
-                break
-        if flag == True and all_distinct_numbers[i]!=0  and all_distinct_numbers[i]!=1: 
-            answer+=1
+    
+    def is_prime(n):
+        if n == 0 or n == 1:
+            return False
+        for i in range (2, int(math.sqrt(n))+1):
+            if n % i == 0:
+                return False
+        return True
+    
+    def permutation(numbers,goal_length):
+        prime_cnt = 0   
+        queue = deque([(str(),set())])
+        while queue:
+            str_num, used_index = queue.popleft()
+            for idx,number in enumerate (numbers):
+                if idx not in used_index:
+                    tmp = str_num + number
+                    tmp_idx = deepcopy(used_index)
+                    tmp_idx.add(idx)
+                    if len(tmp) == goal_length:
+                        if int(tmp) not in made and is_prime(int(tmp)):
+                            prime_cnt += 1
+                            made.add(int(tmp))
+                    else :
+                        queue.append((tmp,tmp_idx))
+        return prime_cnt
+    
+    made = set()
+    for goal_length in range (1, len(numbers)+1):
+        answer += permutation(numbers,goal_length)
     return answer
