@@ -3,9 +3,9 @@ def solution(n):
     answer = 0
     
     # 열과 대각선 사용 여부를 체크하는 배열
-    col = [False] * n
-    diag1 = [False] * (2 * n - 1)
-    diag2 = [False] * (2 * n - 1)
+    is_queen_col = [False] * n
+    is_queen_up_down_diag = [False] * (2 * n - 1)
+    is_queen_down_up_diag = [False] * (2 * n - 1)
     
     def dfs(row):
         global answer
@@ -13,11 +13,11 @@ def solution(n):
             answer += 1
             return
         
-        for c in range(n):
-            if not col[c] and not diag1[row + c] and not diag2[row - c + n - 1]:
-                col[c] = diag1[row + c] = diag2[row - c + n - 1] = True
+        for column in range(n):
+            if not is_queen_col[column] and not is_queen_up_down_diag[row + column] and not is_queen_down_up_diag[row - column + n - 1]:
+                is_queen_col[column] = is_queen_up_down_diag[row + column] = is_queen_down_up_diag[row - column + n - 1] = True
                 dfs(row + 1)
-                col[c] = diag1[row + c] = diag2[row - c + n - 1] = False
+                is_queen_col[column] = is_queen_up_down_diag[row + column] = is_queen_down_up_diag[row - column + n - 1] = False
 
     dfs(0)
     return answer
