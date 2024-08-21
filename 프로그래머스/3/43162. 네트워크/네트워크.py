@@ -1,25 +1,22 @@
 from collections import deque
+
 def solution(n, computers):
     answer = 0
     queue = deque([])
-    connected = set()
-    for i in range (n):
-        visited = set()
-        if i not in connected:
-            queue.append(i)
-            visited.add(i)
+    visited = set()
+    
+    def bfs(start):
+        queue.append(start)
         while queue:
             node = queue.popleft()
-            # print('시작 node : ',computers[node])
-            for idx, network in enumerate (computers[node]):
-                # print(network)
-                if idx not in connected and idx not in visited and network == 1:
-                    # print('queue에 담길 idx : ',  idx)
+            for idx, connect in enumerate(computers[node]):
+                if connect == 1 and idx not in visited:
                     queue.append(idx)
                     visited.add(idx)
-        for a in visited:
-            connected.add(a)
-        if len(visited) != 0:
+    
+    for i in range (n):
+        if i not in visited:
+            bfs(i)
             answer += 1
-        # print(connected)
+                
     return answer
