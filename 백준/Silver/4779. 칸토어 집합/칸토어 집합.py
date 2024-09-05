@@ -17,9 +17,6 @@ def kantor(n, idx):
 
 
 for n in numbers:
-    if n.strip() == '':  # 빈 줄을 처리
-        continue
-    
     n = int(n)
     length = 3**n
     line = [' '] * length
