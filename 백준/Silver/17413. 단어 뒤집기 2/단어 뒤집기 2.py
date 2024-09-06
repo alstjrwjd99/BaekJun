@@ -7,11 +7,17 @@ answer = ''
 stack= ''
 is_safe = False
 
+def remove_signal(stack):
+    return stack and stack[0] == '>'
+
+def add_reverse_stack(answer, stack) :
+    answer += stack[::-1]
+    return answer, ''
+
 for idx, char in enumerate(S):
     if char == '<':
-        if stack and stack[0] == '>': stack = stack[1:]
-        answer += stack[::-1]
-        stack = ''
+        if remove_signal(stack) : stack = stack[1:]
+        answer, stack = add_reverse_stack(answer, stack)
         is_safe = True
     elif char == '>':
         answer += char
@@ -21,11 +27,12 @@ for idx, char in enumerate(S):
         answer += char
     else :
         if char == ' ':
-            if stack and stack[0] == '>': stack = stack[1:]
-            answer += stack[::-1] + ' '
-            stack = ''
+            if remove_signal(stack) : stack = stack[1:]
+            answer, stack = add_reverse_stack(answer, stack)
+            answer += ' '
         else :
             stack += char
-if stack and stack[0] == '>': stack = stack[1:]
+            
+if remove_signal(stack) : stack = stack[1:]
 if stack and stack[-1] != '>' : answer += stack[::-1]
 print(answer)
