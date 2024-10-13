@@ -1,4 +1,6 @@
 def solution(s):
+    answer = len(s)
+    
     def compress(s, length):
         compressed = []
         prev = s[:length]
@@ -21,7 +23,7 @@ def solution(s):
         
         return ''.join(compressed)
     
-    answer = len(s)
+    
     for length in range(1, len(s) // 2 + 1):
         compressed_string = compress(s, length)
         answer = min(answer, len(compressed_string))
