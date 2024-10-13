@@ -1,14 +1,10 @@
-'''
-브루트포스는 시간초과
-stack으로 풀어보자
-'''
 def solution(numbers):
-    answer = [-1] * len(numbers)
     stack = []
-    for i in range (len(numbers)-1):
-        stack.append((numbers[i],i))
-        while stack and stack[-1][0] < numbers[i+1]:
-                number,index = stack.pop()
-                answer[index] = numbers[i+1]
+    result = [-1] * len(numbers)
+    for i in range(len(numbers)):
+        while stack and numbers[stack[-1]] < numbers[i]:
+            result[stack.pop()] = numbers[i]
 
-    return answer
+        stack.append(i)
+
+    return result
