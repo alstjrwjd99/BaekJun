@@ -1,18 +1,19 @@
+import math
+
 def solution(progresses, speeds):
     answer = []
-    works = []
-    for progress,speed in zip(progresses,speeds):
-        remain = 100 - progress
-        if remain % speed == 0:
-            works.append(remain // speed)
-        else :
-            works.append(remain // speed +1)
-    delay = works[0]
-    idx = 0
-    for key, work in enumerate (works):
-        if work > delay:
-            delay = work
-            answer.append(key - idx)
-            idx = key
-    answer.append(len(works) - idx)
+    remain = []
+    for progress, speed in zip(progresses, speeds):
+        remain.append(math.ceil((100-progress) / speed))
+        
+    max_day = remain[0]
+    cnt = 0
+    for done in remain:
+        if max_day >= done:
+            cnt += 1
+        else : 
+            answer.append(cnt)
+            max_day = done
+            cnt = 1
+    answer.append(cnt)
     return answer
