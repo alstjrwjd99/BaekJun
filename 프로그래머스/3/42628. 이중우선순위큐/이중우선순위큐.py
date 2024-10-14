@@ -1,25 +1,17 @@
-import heapq
+import bisect
 
 def solution(operations):
-    answer = []
-    heap = []
-    
-    for oper in operations:
-        op, value = oper.split()
-        
-        if op == "I":
-            heapq.heappush(heap, int(value))
-        elif op == "D":
-            if heap:
-                if value == '-1':
-                    heapq.heappop(heap)  # 최소값을 제거
-                else:
-                    heap.remove(max(heap))  # 최대값을 제거
-                    heapq.heapify(heap)  # 힙 속성 재정렬    
-    if heap:
-        answer.append(max(heap))
-        answer.append(min(heap))
-    else :
-        answer.append(0)
-        answer.append(0)
-    return answer
+    queue = []
+    for operation in operations:
+        cmd,num = operation.split()
+        num = int(num)
+        if cmd == 'I':
+            idx = bisect.bisect_left(queue, num)
+            queue.insert(idx,num)
+        else :
+            if queue :
+                if num == 1:
+                    queue.pop()
+                else : queue.pop(0)
+    if queue: return [queue[-1], queue[0]]
+    else :return [0,0]
