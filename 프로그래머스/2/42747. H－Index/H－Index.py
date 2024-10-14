@@ -1,8 +1,8 @@
 def solution(citations):
-    answer = 0
-    citations.sort(reverse=True)
-    n=len(citations)
-    for i in range(n):
-        if citations[i]<i+1:
-            return i
+    n = len(citations)
+    while True and n > 0:
+        if sum([x >= n for x in citations]) >= n:
+            break
+        else:
+            n -= 1
     return n
