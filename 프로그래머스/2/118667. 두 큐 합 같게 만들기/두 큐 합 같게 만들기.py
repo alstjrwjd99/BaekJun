@@ -1,30 +1,23 @@
 from collections import deque
 
-def solution(q1, q2):
-    answer = -1
-
-    ql = [deque(q1), deque(q2)]
-    sl = [sum(q1), sum(q2)]
+def solution(queue1, queue2):
+    sum1,sum2 = sum(queue1), sum(queue2)
+    if (sum1 + sum2) % 2 == 1 : return -1
     
-    # 홀수인 경우
-    if sum(sl) % 2 != 0:
-        return -1
-    
-    count = 0
-    # l = 2 * sum([ len(v) for v in ql ])
-    l = 2 * sum(map(len,ql))
-    while count < l:
-        if sl[0] == sl[1]:
-            answer = count
-            break
-
-        idx = 1 if sl[0] < sl[1] else 0
-
-        c = ql[idx].popleft()
-        ql[1-idx].append(c)
-
-        sl[idx] -= c
-        sl[1-idx] += c
-        count += 1
-    
-    return answer
+    answer = 0
+    q1,q2 = deque(queue1),deque(queue2)
+    while answer < 4 * (len(queue1)):
+        if sum1 < sum2 : 
+            bigger = q2.popleft()
+            q1.append(bigger)
+            sum2 -= bigger
+            sum1 += bigger
+        elif sum1 > sum2 : 
+            bigger = q1.popleft()
+            q2.append(bigger)
+            sum1 -= bigger
+            sum2 += bigger
+        elif sum1 == sum2 :
+            return answer
+        answer += 1
+    return -1
