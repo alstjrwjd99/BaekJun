@@ -1,7 +1,5 @@
-SELECT b.ANIMAL_ID,b.NAME
-from ANIMAL_INS a right join ANIMAL_OUTS b
-using (ANIMAL_ID)
-where 1=1
-and a.ANIMAL_ID is null
-and b.ANIMAL_ID is not null
-order by a.ANIMAL_ID
+-- 코드를 입력하세요
+SELECT distinct(O.ANIMAL_ID),O.NAME
+from animal_ins I , animal_outs O 
+where O.animal_id not in (select animal_id from animal_ins)
+order by 1,2
