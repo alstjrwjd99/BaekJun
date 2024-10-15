@@ -1,4 +1,7 @@
-SELECT CAR_TYPE, count(*) as CARS from CAR_RENTAL_COMPANY_CAR
-where options like '%시트%'
-group by 1
-order by 1
+SELECT car_type, COUNT(*) AS CARS
+FROM CAR_RENTAL_COMPANY_CAR
+WHERE options LIKE '%통풍시트%' 
+   OR options LIKE '%열선시트%' 
+   OR options LIKE '%가죽시트%'
+GROUP BY car_type
+ORDER BY car_type;
