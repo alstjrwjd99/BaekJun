@@ -1,23 +1,34 @@
 def solution(n):
-    global answer
     answer = 0
-    
-    # 열과 대각선 사용 여부를 체크하는 배열
-    is_queen_col = [False] * n
-    is_queen_up_down_diag = [False] * (2 * n - 1)
-    is_queen_down_up_diag = [False] * (2 * n - 1)
-    
-    def dfs(row):
-        global answer
+
+    # 각 열, 대각선을 방문했는지 기록하는 배열
+    col = [False] * n
+    up_diag = [False] * (2 * n - 1)  # 오른쪽 위에서 왼쪽 아래로 가는 대각선
+    down_diag = [False] * (2 * n - 1)  # 왼쪽 위에서 오른쪽 아래로 가는 대각선
+
+    def n_queen(row):
+        nonlocal answer
         if row == n:
             answer += 1
             return
-        
-        for column in range(n):
-            if not is_queen_col[column] and not is_queen_up_down_diag[row + column] and not is_queen_down_up_diag[row - column + n - 1]:
-                is_queen_col[column] = is_queen_up_down_diag[row + column] = is_queen_down_up_diag[row - column + n - 1] = True
-                dfs(row + 1)
-                is_queen_col[column] = is_queen_up_down_diag[row + column] = is_queen_down_up_diag[row - column + n - 1] = False
 
-    dfs(0)
+        # 열을 하나씩 확인하며 퀸을 놓을 수 있는지 확인
+        for j in range(n):
+            if not col[j] and not up_diag[row + j] and not down_diag[row - j + (n - 1)]:
+                # 퀸을 놓을 수 있으면 마크
+                col[j] = True
+                up_diag[row + j] = True
+                down_diag[row - j + (n - 1)] = True
+
+                # 다음 행으로 이동
+                n_queen(row + 1)
+
+                # 백트래킹: 다시 퀸을 놓지 않은 상태로 되돌리기
+                col[j] = False
+                up_diag[row + j] = False
+                down_diag[row - j + (n - 1)] = False
+
+    # 첫 번째 행부터 시작
+    n_queen(0)
+
     return answer
