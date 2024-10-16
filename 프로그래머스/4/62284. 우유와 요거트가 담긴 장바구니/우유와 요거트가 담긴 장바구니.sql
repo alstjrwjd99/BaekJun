@@ -1,6 +1,4 @@
-SELECT CART_ID
-FROM CART_PRODUCTS 
-WHERE NAME IN ('MILK','YOGURT')
-GROUP BY 1
-HAVING COUNT(DISTINCT NAME) = 2
-ORDER BY 1
+SELECT distinct (cart_id)
+from CART_PRODUCTS
+where (cart_id, 'Milk') in (select cart_id, name from cart_products group by cart_id) and (cart_id, 'Yogurt') in (select cart_id, name from cart_products group by cart_id)
+order by cart_id
