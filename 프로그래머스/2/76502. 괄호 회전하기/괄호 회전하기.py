@@ -1,29 +1,19 @@
 def solution(s):
     answer = 0
-    n = len(s)
-    # 올바른 괄호인지 파악하는 함수 작성
-    # 문자열 회전하는 코드 작성
-    def isParth(parth):
+    def is_correct(string):
         stack = []
-        stack.append(parth[0])
-        for i in range (1,len(parth)):
-            if len(stack) == 0:
-                stack.append(parth[i])
-            else :
-                if stack[-1] == '[' and parth[i] == ']':
+        pairs = {'[':']', '(':')', '{':'}'}
+        for st in string :
+            if st in pairs:
+                stack.append(st)
+            else : 
+                if stack and pairs[stack[-1]] == st:
                     stack.pop()
-                elif stack[-1] == '(' and parth[i] == ')':
-                    stack.pop()
-                elif stack[-1] == '{' and parth[i] == '}':
-                    stack.pop()
-                else :
-                    stack.append(parth[i])
-        if len(stack) == 0:
-            return True
-        else : return False
-    for i in range (n):
-        s = s[1:] + s[0]
-        if isParth(s) :
-            answer += 1
-    
+                else : return False
+        if stack : return False
+        return True
+        
+    for i in range (len(s)):
+        if is_correct(s[i:] + s[:i]) : answer += 1
     return answer
+
