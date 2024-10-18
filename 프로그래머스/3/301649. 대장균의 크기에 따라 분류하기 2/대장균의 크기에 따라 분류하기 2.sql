@@ -1,11 +1,9 @@
-SELECT id,
-       CASE
-           WHEN a.s_rank * 100 / total_count <= 25 THEN 'CRITICAL'
-           WHEN a.s_rank * 100 / total_count <= 50 THEN 'HIGH'
-           WHEN a.s_rank * 100 / total_count <= 75 THEN 'MEDIUM'
-           ELSE 'LOW'
-           END AS colony_name
-FROM (SELECT *,
-             rank() over (ORDER BY SIZE_OF_COLONY DESC) AS s_rank, COUNT(*) over () AS total_count
-      FROM ecoli_data) a
-ORDER BY 1
+SELECT A.ID, IF(PCT <= 0.25, 'CRITICAL',
+             IF(PCT <= 0.5, 'HIGH',
+               IF(PCT <= 0.75, 'MEDIUM','LOW'))) AS COLONY_NAME
+FROM ECOLI_DATA A
+JOIN (SELECT ID, PERCENT_RANK() OVER (ORDER BY SIZE_OF_COLONY DESC) AS PCT
+FROM ECOLI_DATA
+) B
+ON A.ID = B.ID
+ORDER BY A.ID
