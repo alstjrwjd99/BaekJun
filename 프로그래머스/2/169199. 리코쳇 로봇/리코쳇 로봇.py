@@ -1,27 +1,37 @@
 from collections import deque
+
 def solution(board):
     answer = 0
-    dx = [-1,1,0,0]
-    dy = [0,0,1,-1]
-    queue = deque([])
-    col = len(board)
-    row = len(board[0])
-    dist = [[987654321 for _ in range(row)] for _ in range(col)]
-    for i in range (col):
-        for j in range (row):
+    n = len(board)
+    m = len(board[0])
+    
+    s_x, s_y = -1, -1
+    for i in range(n):
+        for j in range(m):
             if board[i][j] == 'R':
-                queue.append((i,j,0))
-                break
+                s_x, s_y = i, j 
+            elif board[i][j] == 'G':
+                end = (i, j)
+                
+    def in_range(x, y):
+        return 0 <= x < n and 0 <= y < m
+    
+    queue = deque([(s_x, s_y, 0)])
+    visited = set([(s_x, s_y)])
+    
     while queue:
-        x,y,z = queue.popleft()
-        if board[x][y] == 'G':
-            return z
-        for i in range (4):
-            nx,ny = x,y            
-            while (0 <= nx + dx[i] < col and 0 <= ny + dy[i] < row and board[ nx + dx[i] ][ny + dy[i]] != 'D'):
-                nx += dx[i]
-                ny += dy[i]
-            if dist[nx][ny] > z+1:
-                dist[nx][ny] = z+1
-                queue.append((nx,ny,z+1))
+        x, y, cnt = queue.popleft()
+        for dx, dy in zip((-1, 0, 1, 0), (0, 1, 0, -1)):
+            nx, ny = x + dx, y + dy
+            while in_range(nx, ny) and board[nx][ny] != 'D':
+                nx += dx
+                ny += dy
+            nx -= dx
+            ny -= dy
+            if (nx, ny) == end:
+                return cnt + 1
+            if (nx, ny) not in visited:
+                queue.append((nx, ny, cnt + 1))
+                visited.add((nx, ny))
+    
     return -1
