@@ -1,37 +1,28 @@
-from collections import deque, defaultdict
+uf = []
+
+def find(a):
+    global uf
+    if uf[a] < 0: return a
+    uf[a] = find(uf[a])
+    return uf[a]
+
+def merge(a, b):
+    global uf
+    pa = find(a)
+    pb = find(b)
+    if pa == pb: return
+    uf[pa] += uf[pb]
+    uf[pb] = pa
 
 def solution(n, wires):
-    answer = float('inf')
-    
-    def find(wires):
-        visited = set()
-        graph = defaultdict(list)
-        group = []
-        
-        for w,i in wires :
-            graph[w].append(i)
-            graph[i].append(w)
-        
-        def bfs(i):
-            queue = deque([i])
-            visited.add(i)
-            tmp = [i]
-            while queue:
-                node= queue.popleft()
-                for nex in graph[node]:
-                    if nex not in visited:
-                        queue.append(nex)
-                        visited.add(nex)
-                        tmp.append(nex)
-            return len(tmp)
-            
-        
-        for i in range (1,n+1):
-            if i not in visited :
-                group.append(bfs(i))
-            
-        return abs(group[0] - group[1])
-        
-    for i in range (len(wires)):
-        answer = min(answer,find(wires[:i] + wires[i+1:]))
+    global uf
+    answer = int(1e9)
+    k = len(wires)
+    for i in range(k):
+        uf = [-1 for _ in range(n+1)]
+        tmp = [wires[x] for x in range(k) if x != i]
+        for a, b in tmp: merge(a, b)
+        v = [x for x in uf[1:] if x < 0]
+        answer = min(answer, abs(v[0]-v[1]))
+
     return answer
