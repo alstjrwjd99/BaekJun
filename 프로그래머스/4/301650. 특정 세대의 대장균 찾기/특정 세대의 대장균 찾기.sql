@@ -1,4 +1,5 @@
-SELECT A.ID
-FROM ECOLI_DATA A JOIN ECOLI_DATA B ON A.PARENT_ID = B.ID JOIN ECOLI_DATA C ON B.PARENT_ID = C.ID
-WHERE ISNULL(C.PARENT_ID)
-ORDER BY ID
+select C.id
+from ecoli_data C join (select B.id
+from ecoli_data A join ecoli_data B on A.id = B.parent_id
+where A.parent_id is null) D on C.parent_id = D.id
+order by C.id
