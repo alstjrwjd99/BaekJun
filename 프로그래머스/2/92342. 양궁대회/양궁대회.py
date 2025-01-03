@@ -1,21 +1,8 @@
-'''
-라이언이 점수를 얻을 수 있는 경우
-1. 어피치랑 같은 점수를 쐈을 때
-    - 더 많이 맞추면 됨 ( 같으면 안됨 )
-2. 어피치랑 다른 점수를 쐈을 때
-    - 한번만 맞추면 됨
-
-가장 큰 점수 차이로 우승해야함
--> 어치피의 점수를 많이 뻇어오는 경우
--> 그냥 최고 득점 하는 경우
-
-백트래킹 완전탐색
-10점 -> 0점 순서대로 진행
-'''
 def solution(n, info):
-    answer = [-1] * 11
-    max_diff = 0 
+    answer = [-1] * 11  # 결과 저장
+    max_diff = 0  # 최대 점수 차이 저장
 
+    # 점수 계산 함수
     def calculate_score(ryan, apeach):
         ryan_score, apeach_score = 0, 0
         for i in range(11):
@@ -25,6 +12,7 @@ def solution(n, info):
                 apeach_score += 10 - i
         return ryan_score, apeach_score
 
+    # DFS 탐색
     def dfs(idx, arrows_left, ryan):
         nonlocal answer, max_diff
 
@@ -55,11 +43,11 @@ def solution(n, info):
         if arrows_left > info[idx]:
             ryan[idx] = info[idx] + 1
             dfs(idx + 1, arrows_left - (info[idx] + 1), ryan)
-            ryan[idx] = 0  
+            ryan[idx] = 0  # 백트래킹
 
         # 화살을 쏘지 않는 경우
         dfs(idx + 1, arrows_left, ryan)
 
-    dfs(0, n, [0] * 11) 
+    dfs(0, n, [0] * 11)  # 초기화 상태로 DFS 시작
 
     return answer if max_diff > 0 else [-1]
