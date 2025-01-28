@@ -1,60 +1,43 @@
-from collections import defaultdict, deque
 from itertools import permutations
-from copy import deepcopy
-def move_cost(board, start, end):   # 조작 횟수 Count
-    if start==end: return 0
-    queue, visit = deque([[start[0], start[1], 0]]), {start}
-    while queue:                    # BFS
-        x, y, c = queue.popleft()
-        for dx, dy in [(0,1),(0,-1),(1,0),(-1,0)]:
-            nx, ny = x+dx, y+dy     # Normal move
-            cx, cy = x, y
-            while True:             # Ctrl + move
-                cx, cy = cx+dx, cy+dy
-                if not (0 <= cx <= 3 and 0 <= cy <= 3):
-                    cx, cy = cx-dx, cy-dy
-                    break
-                elif board[cx][cy] != 0:
-                    break
+from collections import deque
 
-            if (nx, ny) == end or (cx, cy) == end:  # 도착 최단 경로
-                return c+1
+def ctrl(board, x0, y0, dx, dy):
+    for i in range(1, 4):
+        if 0 <= (x1 := x0 + dx * i) < 4 and 0 <= (y1 := y0 + dy * i) < 4:
+            if board[x1][y1] > 0:
+                return (x1, y1)
+            l = i
+    return (x0 + dx * l, y0 + dy * l)
 
-            if (0 <= nx <= 3 and 0 <= ny <= 3) and (nx, ny) not in visit:
-                queue.append((nx, ny, c+1))
-                visit.add((nx, ny))
-            if (cx, cy) not in visit:
-                queue.append((cx, cy, c+1))
-                visit.add((cx, cy))
-
-def cls_cost(board, cdict, curr, order, cost):
-    if len(order)==0: return cost   # 모든 카드를 확인한 경우
-    idx = order[0]+1                # 현재 선택해야할 카드의 종류
-
-    # 현재위치에서 A1까지의 조작 횟수 + A1->A2까지의 조작 횟수 + 2(카드 선택)
-    choice1 = move_cost(board, curr, cdict[idx][0]) + move_cost(board, cdict[idx][0], cdict[idx][1]) + 2
-    choice2 = move_cost(board, curr, cdict[idx][1]) + move_cost(board, cdict[idx][1], cdict[idx][0]) + 2
-
-    # 선택한 카드는 board에서 0으로 변경
-    new_board = deepcopy(board)
-    new_board[cdict[idx][0][0]][cdict[idx][0][1]] = 0
-    new_board[cdict[idx][1][0]][cdict[idx][1][1]] = 0
-
-    if choice1 < choice2:   # 적은 조작 횟수를 한 경우를 따라 재귀
-        return cls_cost(new_board, cdict, cdict[idx][1], order[1:], cost + choice1)
-    else:
-        return cls_cost(new_board, cdict, cdict[idx][0], order[1:], cost + choice2)
+def move(board, xy0, xy1):
+    dist = [[6] * 4 for _ in range(4)]
+    q = deque([(xy0, 0)])
+    while q:
+        [x, y], d = q.popleft()
+        if d < dist[x][y]:
+            dist[x][y] = d
+            for dx, dy in [(+1, 0), (-1, 0), (0, +1), (0, -1)]:
+                if 0 <= x + dx < 4 and 0 <= y + dy < 4:
+                    q.append(((x + dx, y + dy), d + 1))
+                    q.append((ctrl(board, x, y, dx, dy), d + 1))
+    return dist[xy1[0]][xy1[1]]
 
 def solution(board, r, c):
-    answer = float('inf')
-    cdict = defaultdict(list)
-    for row in range(4):        # 카드의 종류에 따라 좌표 저장
-        for col in range(4):
-            num = board[row][col]
-            if num != 0:
-                cdict[num].append((row, col))
-
-    for case in permutations(range(len(cdict)), len(cdict)):    # 완전 탐색
-        answer = min(answer, cls_cost(board, cdict, (r, c), case, 0))
-
-    return answer
+    loc = {k: [] for k in range(1, 7)}
+    for i in range(4):
+        for j in range(4):
+            if board[i][j]:
+                loc[board[i][j]].append((i, j))
+    minv = 100
+    for p in permutations(filter(lambda v: v, loc.values())):
+        sumv = 0
+        xys = [(r, c)]
+        stage = [[v for v in w] for w in board]
+        for xy1, xy2 in p:
+            vs = [(move(stage, xy, xy1) + move(stage, xy1, xy2), xy2) for xy in xys]\
+               + [(move(stage, xy, xy2) + move(stage, xy2, xy1), xy1) for xy in xys]
+            stage[xy1[0]][xy1[1]] = stage[xy2[0]][xy2[1]] = 0
+            sumv += 2 + (mvn := min(vs)[0])
+            xys = [xy for m, xy in vs if m == mvn]
+        minv = min(sumv, minv)
+    return minv
