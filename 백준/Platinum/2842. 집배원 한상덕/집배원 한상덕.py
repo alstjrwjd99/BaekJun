@@ -19,16 +19,12 @@ def get_fat_values():
             vals.add(fatigue[i][j])
     return sorted(vals)
 
-fat_values = get_fat_values()
-
 def get_post_office():
     for i in range(n):
         for j in range(n):
             if town[i][j] == 'P':
                 return i, j
     return None
-
-p_x, p_y = get_post_office()
 
 def count_houses():
     cnt = 0
@@ -37,9 +33,7 @@ def count_houses():
             if town[i][j] == 'K':
                 cnt += 1
     return cnt
-
-total_K = count_houses()
-
+    
 def bfs(start_x, start_y, low, high):
     if not (low <= fatigue[start_x][start_y] <= high):
         return False
@@ -62,7 +56,6 @@ def bfs(start_x, start_y, low, high):
                     q.append((nx, ny))
     return count == total_K
 
-# 후보 구간 [L, L+D] 중에서 시작점 'P'의 피로도가 포함되고 BFS로 모든 'K'를 방문할 수 있는 구간이 있는지 확인
 def canReach(D):
     for L in fat_values:
         R = L + D
@@ -71,6 +64,10 @@ def canReach(D):
         if bfs(p_x, p_y, L, R):
             return True
     return False
+
+fat_values = get_fat_values()
+p_x, p_y = get_post_office()
+total_K = count_houses()
 
 low_D = 0
 high_D = fat_values[-1] - fat_values[0]  
