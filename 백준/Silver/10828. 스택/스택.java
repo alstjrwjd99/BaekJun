@@ -1,0 +1,59 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static ArrayDeque<Integer> stack = new ArrayDeque<Integer>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String cmd = st.nextToken();
+            if (cmd.equals("push")) {
+                push(Integer.parseInt(st.nextToken()));
+            } else if (cmd.equals("pop")) {
+                pop();
+            } else if (cmd.equals("size")) {
+                size();
+            } else if (cmd.equals("empty")) {
+                empty();
+            } else if (cmd.equals("top")) {
+                top();
+            }
+        }
+
+    }
+
+    static void push(int val){
+        stack.addLast(val);
+    }
+
+    static void pop(){
+        if(stack.isEmpty()){
+            System.out.println(-1);
+        }else{
+            System.out.println(stack.removeLast());
+        }
+    }
+
+    static void size(){
+        System.out.println(stack.size());
+    }
+
+    static void empty(){
+        if (stack.isEmpty()){
+            System.out.println(1);
+        }else {
+            System.out.println(0);
+        }
+    }
+
+    static void top(){
+        if (stack.isEmpty()){
+            System.out.println(-1);
+        }else {
+            System.out.println(stack.getLast());
+        }
+    }
+}
