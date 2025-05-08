@@ -1,18 +1,18 @@
-# [Gold II] 2048 (Easy) - 12100 
+# [Gold I] 2048 (Easy) - 12100 
 
 [문제 링크](https://www.acmicpc.net/problem/12100) 
 
 ### 성능 요약
 
-메모리: 31852 KB, 시간: 308 ms
+메모리: 21700 KB, 시간: 164 ms
 
 ### 분류
 
-백트래킹, 브루트포스 알고리즘, 구현, 시뮬레이션
+구현, 브루트포스 알고리즘, 시뮬레이션, 백트래킹
 
 ### 제출 일자
 
-2024년 4월 8일 15:05:08
+2025년 5월 8일 18:19:37
 
 ### 문제 설명
 
@@ -64,7 +64,7 @@
 	<tbody>
 		<tr>
 			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/8.png" style="height:250px; width:247px"></td>
-			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/10.png" style="height:250px; width:249px"></td>
+			<td style="text-align:center"><img alt="" src="" style="height:250px; width:249px"></td>
 		</tr>
 	</tbody>
 	<tfoot>
@@ -80,10 +80,10 @@
 <table class="table">
 	<tbody>
 		<tr>
-			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/17.png" style="height:250px; width:248px"></td>
+			<td style="text-align:center"><img alt="" src="" style="height:250px; width:248px"></td>
 			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/18.png" style="height:250px; width:252px"></td>
 			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/19.png" style="height:250px; width:250px"></td>
-			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/20.png" style="height:250px; width:250px"></td>
+			<td style="text-align:center"><img alt="" src="" style="height:250px; width:250px"></td>
 		</tr>
 	</tbody>
 	<tfoot>
@@ -103,8 +103,8 @@
 <table class="table">
 	<tbody>
 		<tr>
-			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/21.png" style="height:250px; width:249px"></td>
-			<td style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/12094/22.png" style="height:250px; width:249px"></td>
+			<td style="text-align:center"><img alt="" src="" style="height:250px; width:249px"></td>
+			<td style="text-align:center"><img alt="" src="" style="height:250px; width:249px"></td>
 		</tr>
 	</tbody>
 	<tfoot>
