@@ -34,7 +34,6 @@ class Main {
 
     static int bfs() {
         Queue<int[]> queue = new ArrayDeque<>();
-        // x, y, 이동 횟수, 벽 부쉈는지 여부(0=아직 안 부쉈음, 1=부쉈음)
         queue.add(new int[]{0, 0, 1, 0});
         visited[0][0][0] = true;
 
@@ -50,14 +49,12 @@ class Main {
             for (int i = 0; i < 4; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
-
-                if (0 <= nx && nx < n && 0 <= ny && ny < m) {
-                    // 벽이 아닌 경우
+                boolean inRange = 0 <= nx && nx < n && 0 <= ny && ny < m; 
+                if (inRange) {
                     if (map[nx][ny] == 0 && !visited[nx][ny][broken]) {
                         visited[nx][ny][broken] = true;
                         queue.add(new int[]{nx, ny, cnt + 1, broken});
                     }
-                    // 벽이고 아직 안 부쉈으면 부수고 간다
                     else if (map[nx][ny] == 1 && broken == 0 && !visited[nx][ny][1]) {
                         visited[nx][ny][1] = true;
                         queue.add(new int[]{nx, ny, cnt + 1, 1});
