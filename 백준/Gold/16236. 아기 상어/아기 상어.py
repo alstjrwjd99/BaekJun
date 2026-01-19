@@ -1,73 +1,84 @@
 import sys
+from collections import deque
 input = sys.stdin.readline
 
-from collections import deque 
+N = int(input())
+sea = [list(map(int, input().split())) for _ in range(N)]
 
-n = int(input())
-place = [ list(map(int,input().split())) for _ in range (n)]
-dxs, dys = [-1,0,1,0],[0,1,0,-1]
-baby_shark = {
-    'x' : 0, 'y' : 0 , 'size' : 2 , 'eat' : 0 
-}
-INF = float('inf')
+dxs, dys = (0, 1, 0, -1), (1, 0, -1, 0)
 
-for i in range (n):
-    for j in range (n):
-        if place[i][j] == 9 :
-            baby_shark['x'] = i
-            baby_shark['y'] = j
+def in_range(x, y):
+    return 0 <= x < N and 0 <= y < N
+
+sx = sy = -1
+for i in range(N):
+    for j in range(N):
+        if sea[i][j] == 9:
+            sx, sy = i, j
+            sea[i][j] = 0
+            break
+    if sx != -1:
+        break
+
+def find_small_fish(sx, sy, size):
+    visited = [[False] * N for _ in range(N)]
+    q = deque()
+    q.append((sx, sy, 0))
+    visited[sx][sy] = True
+
+    fishes = []
+    min_dist = None
+
+    while q:
+        x, y, dist = q.popleft()
+
+        # 이미 먹이를 찾았고, 그보다 더 먼 레벨이면 중단
+        if min_dist is not None and dist > min_dist:
             break
 
-def in_range(x,y):
-    return 0<=x<n and 0<=y<n
-
-def find_smallest_fish(bs):
-    i,j, current_size = bs['x'], bs['y'], bs['size']
-    queue = deque([(i,j,0)])
-    visited = set([(i,j)])
-    smallest = [INF,INF,INF] # x,y, moved_cnt
-    
-    while queue:
-        x,y,moved = queue.popleft()
         for dx, dy in zip(dxs, dys):
-            nx, ny = x + dx , y + dy
-            if in_range(nx,ny) and (nx,ny) not in visited:
-                if place[nx][ny] < current_size:
-                    queue.append((nx,ny,moved+1))
-                    visited.add((nx,ny))
-                    if place[nx][ny] != 0:
-                        # 새로운 후보의 이동 거리는 moved+1
-                        if moved+1 < smallest[2]:
-                            smallest = [nx, ny, moved+1]
-                        elif moved+1 == smallest[2]:
-                            # 행 번호가 작거나, 행이 같다면 열 번호가 작은 경우 업데이트
-                            if nx < smallest[0] or (nx == smallest[0] and ny < smallest[1]):
-                                smallest = [nx, ny, moved+1]
-                elif place[nx][ny] == current_size:
-                    queue.append((nx,ny,moved + 1))
-                    visited.add((nx,ny))    
+            nx, ny = x + dx, y + dy
+            if not in_range(nx, ny) or visited[nx][ny]:
+                continue
 
-    if smallest != [INF,INF,INF] :
-        place[i][j] = 0
-        place[smallest[0]][smallest[1]] = 9
-    return smallest
+            # 이동 가능 조건: 자신 크기 이하만 통과
+            if sea[nx][ny] > size:
+                continue
 
-answer = 0 
-while True: 
-    place_x, place_y , moved = find_smallest_fish(baby_shark)
-    if (place_x != INF and place_y != INF):
-        if baby_shark['eat'] + 1 == baby_shark['size'] :
-            baby_shark['x'] = place_x
-            baby_shark['y'] = place_y
-            baby_shark['size'] += 1 
-            baby_shark['eat'] = 0
-        elif baby_shark['eat'] + 1 < baby_shark['size'] :
-            baby_shark['x'] = place_x
-            baby_shark['y'] = place_y
-            baby_shark['eat'] += 1
-            
-        answer += moved
-    else :
+            visited[nx][ny] = True
+            nd = dist + 1
+
+            # 먹을 수 있는 물고기
+            if 1 <= sea[nx][ny] < size:
+                fishes.append((nd, nx, ny))
+                min_dist = nd
+            else:
+                # 빈칸(0) 또는 같은 크기(size)는 이동만
+                q.append((nx, ny, nd))
+
+    if not fishes:
+        return None
+    fishes.sort()  # (거리, x, y)
+    return fishes[0]  # (dist, x, y)
+
+x, y = sx, sy
+size = 2
+eat_cnt = 0
+answer = 0
+
+while True:
+    res = find_small_fish(x, y, size)
+    if res is None:
         break
+
+    dist, nx, ny = res
+    answer += dist
+    sea[nx][ny] = 0
+    x, y = nx, ny
+
+    eat_cnt += 1
+    if eat_cnt == size:
+        size += 1
+        eat_cnt = 0
 
 print(answer)
